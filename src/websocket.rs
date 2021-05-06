@@ -4,33 +4,28 @@ use serenity::{
 };
 use std::{thread, time};
 
-struct Token;
-impl TypeMapKey for Token {
-    type Value = String;
-}
+use crate::env;
 
 struct Handler;
 impl EventHandler for Handler {
+    fn ready(&self, _: Context, ready: Ready) {
+        println!("{} is connected!", ready.user.name);
+    }
+
     fn message(&self, ctx: Context, msg: Message) {
-        if msg.author.name != "bronnie-degniart" && msg.channel_id.as_u64() == &(839488059253719080 as u64) {
+        if msg.author.name != "bronnie-degniart"
+            && msg.channel_id.as_u64() == &(839488059253719080 as u64)
+        {
             println!("{}", msg.author.name);
             delete_message(&ctx, &msg);
         }
     }
-
-    fn ready(&self, _: Context, ready: Ready) {
-        println!("{} is connected!", ready.user.name);
-    }
 }
 
-pub fn start_websocket(token: String) {
-    let mut client = Client::new(token.clone(), Handler).expect("Err creating client");
+pub fn start_websocket() {
+    let mut client =
+        Client::new(env::CONFIG.token.to_string(), Handler).expect("Err creating client");
     let five_minutes = time::Duration::from_millis(300000);
-
-    {
-        let mut data = client.data.write();
-        data.insert::<Token>(token);
-    }
 
     loop {
         if let Err(why) = client.start() {

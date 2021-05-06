@@ -1074,11 +1074,13 @@ dependencies = [
 name = "kho-lanto"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "async-std",
  "chrono",
  "config",
  "job_scheduler",
  "once_cell",
+ "serde 1.0.125",
  "serde_json",
  "serenity",
  "surf",
