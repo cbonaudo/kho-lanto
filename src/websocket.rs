@@ -4,7 +4,7 @@ use serenity::{
 };
 use std::{thread, time};
 
-use crate::env;
+use crate::config;
 
 struct Handler;
 impl EventHandler for Handler {
@@ -24,7 +24,7 @@ impl EventHandler for Handler {
 
 pub fn start_websocket() {
     let mut client =
-        Client::new(env::CONFIG.token.to_string(), Handler).expect("Err creating client");
+        Client::new(config::CONFIG.token.to_string(), Handler).expect("Err creating client");
     let five_minutes = time::Duration::from_millis(300000);
 
     loop {

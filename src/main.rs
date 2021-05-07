@@ -1,14 +1,19 @@
-extern crate config;
+use std::thread;
 
-mod env;
+mod config;
+
 mod schedule;
 mod startup;
 mod websocket;
 
-use std::thread;
+mod models;
+mod domain;
 
-fn main() {
-    startup::startup_actions();
+
+#[tokio::main]
+async fn main() {
+
+    startup::startup_actions().await;
 
     let schedule_thread = thread::spawn(|| schedule::start_scheduler());
     let websocket_thread = thread::spawn(|| websocket::start_websocket());
