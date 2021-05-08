@@ -1,8 +1,8 @@
 use once_cell::sync::Lazy;
 
-pub static CHAT_STATE : Lazy<ChatState> = Lazy::new(|| {
-    ChatState::new()
-});
+use crate::domain::MessageHandle;
+
+pub static CHAT_STATE: Lazy<ChatState> = Lazy::new(|| ChatState::new());
 
 pub struct ChatState {
     pub wood: Option<String>,
@@ -16,4 +16,6 @@ impl ChatState {
             fire: None,
         }
     }
+
+    pub fn save_message_handle(message_handle: MessageHandle) {}
 }

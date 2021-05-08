@@ -1,4 +1,7 @@
-use crate::models::camp::camp_getters::CampGetters;
+use crate::secondary_adapters::{
+    camp::camp_getters::CampGetters,
+    chat::{chat_actions::ChatActions, chat_state::ChatState},
+};
 
 pub struct MessageInput {
     pub message: String,
@@ -13,7 +16,11 @@ pub struct MessageHandle {
 pub struct Startup;
 
 impl Startup {
-    pub fn get_startup_messages() -> Vec<MessageInput> {
+    pub async fn delete_all_messages() {
+        ChatActions::delete_all_messages().await;
+    }
+
+    pub async fn send_start_messages() {
         let mut message_list: Vec<MessageInput> = vec![];
 
         let hello_message = "Bonjour, c'est Bronnie Degniart et Bienvenue pour cette première saison de Kho Lanto !".to_string();
@@ -48,10 +55,13 @@ impl Startup {
         //     });
         // }
 
-        message_list
+        for message in message_list {
+            let message_id = ChatActions::send_message(message.message).await.unwrap();
+
+            ChatState::save_message_handle(MessageHandle {
+                handle: message.handle,
+                message_id,
+            });
+        }
     }
-
-    pub fn save_message_handle(message_handle: MessageHandle) {}
-
-    
 }
