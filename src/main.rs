@@ -7,7 +7,7 @@ mod startup;
 mod websocket;
 
 mod models;
-mod domain;
+mod controllers;
 
 
 #[tokio::main]

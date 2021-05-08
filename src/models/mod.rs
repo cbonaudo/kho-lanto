@@ -1,1 +1,1 @@
-pub mod camp_state;
+pub mod camp;

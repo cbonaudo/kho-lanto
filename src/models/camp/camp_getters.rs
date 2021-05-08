@@ -1,8 +1,8 @@
-use crate::models::camp_state::CAMP_STATE;
+use super::camp_state::CAMP_STATE;
 
-pub struct CampResources;
+pub struct CampGetters;
 
-impl CampResources {
+impl CampGetters {
     pub fn get_wood_amount() -> u128 {
         CAMP_STATE.wood
     }

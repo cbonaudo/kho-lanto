@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 
-use crate::{config, domain::camp_resources::CampResources};
+use crate::{config, controllers, models::camp::camp_getters::CampGetters};
 
 #[derive(Debug, Deserialize, Serialize)]
 struct ChannelMessage {
@@ -46,27 +46,16 @@ async fn delete_message(message: ChannelMessage) {
 async fn send_start_messages() {
     let request_url = "https://discord.com/api/channels/839488059253719080/messages".to_string();
 
-    let hello_message = "Bonjour, c'est Bronnie Degniart et Bienvenue pour cette première saison de Kho Lanto !".to_string();  
-    send_message(request_url.clone(), hello_message).await;
+    let message_list = controllers::Startup::get_startup_messages();
 
-    let break_message = "------".to_string();
-    send_message(request_url.clone(), break_message).await;
-
-    let white_camp_message = "Campement de la tribu blanche :".to_string();
-    send_message(request_url.clone(), white_camp_message).await;
-
-    let fire_message = format!("Bois: {} buches", CampResources::get_wood_amount());
-    send_message(request_url.clone(), fire_message).await;
-
-    if CampResources::is_fire_tryable() {
-        let fire_message = "Feu: |========  |".to_string();
-        send_message(request_url, fire_message).await;
+    for message in message_list {
+        send_message(request_url.clone(), message).await;
     }
-
 }
 
 async fn send_message(_request_url: String, message: String) {
     println!("{}", message);
+    
     // if let Err(e) = surf::post(request_url)
     //     .body(json!({
     //         "content": message,
