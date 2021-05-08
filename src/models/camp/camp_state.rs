@@ -1,8 +1,6 @@
 use once_cell::sync::Lazy;
 
-pub static CAMP_STATE : Lazy<CampState> = Lazy::new(|| {
-    CampState::new()
-});
+pub static CAMP_STATE: Lazy<CampState> = Lazy::new(|| CampState::new());
 
 pub struct CampState {
     pub wood: u128,

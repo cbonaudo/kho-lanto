@@ -1,3 +1,3 @@
 mod startup;
 
-pub use startup::Startup;
+pub use startup::{MessageHandle, MessageInput, Startup};

@@ -1,5 +1,3 @@
-
 pub struct CampActions;
 
-impl CampActions {
-}
+impl CampActions {}
