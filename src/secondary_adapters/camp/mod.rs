@@ -1,3 +1,6 @@
-pub mod camp_actions;
-pub mod camp_getters;
-pub mod camp_state;
+mod camp_actions;
+mod camp_getters;
+mod camp_state;
+
+pub use camp_actions::CampActions;
+pub use camp_getters::CampGetters;

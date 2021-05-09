@@ -2,7 +2,11 @@ use anyhow::{anyhow, Result as AnyResult};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 
-use crate::config;
+use super::chat_state::CHAT_STATE;
+use crate::{
+    config,
+    domain::{MessageHandle, MessageInput},
+};
 
 pub struct ChatActions;
 
@@ -12,25 +16,34 @@ pub struct ChannelMessage {
 }
 
 impl ChatActions {
-    pub async fn update_message(message_id: String, message: String) -> AnyResult<String> {
-        let request_url = format!(
-            "https://discord.com/api/channels/839488059253719080/messages/{}",
-            message_id
-        );
+    pub async fn send_message(message_input: MessageInput) {
+        let request_url = format!("https://discord.com/api/channels/839488059253719080/messages");
 
-        surf::post(request_url)
+        let message_id = surf::post(request_url)
             .body(json!({
-                "content": message,
+                "content": message_input.message,
             }))
             .header("Authorization", config::get_header())
             .recv_json::<ChannelMessage>()
             .await
             .map(|res| res.id)
-            .map_err(|err| anyhow!("Error while trying to send api message: {}", err))
+            .unwrap();
+
+        CHAT_STATE
+            .message_handle_list
+            .lock()
+            .unwrap()
+            .push(MessageHandle {
+                handle: message_input.handle,
+                message_id,
+            });
     }
 
-    pub async fn send_message(message: String) -> AnyResult<String> {
-        let request_url = format!("https://discord.com/api/channels/839488059253719080/messages");
+    pub async fn update_message(message_id: String, message: String) -> AnyResult<String> {
+        let request_url = format!(
+            "https://discord.com/api/channels/839488059253719080/messages/{}",
+            message_id
+        );
 
         surf::post(request_url)
             .body(json!({

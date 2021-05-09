@@ -1,13 +1,13 @@
-use crate::secondary_adapters::{
-    camp::camp_getters::CampGetters,
-    chat::{chat_actions::ChatActions, chat_state::ChatState},
-};
+use serde::{Deserialize, Serialize};
+
+use crate::secondary_adapters::{camp::CampGetters, chat::ChatActions};
 
 pub struct MessageInput {
     pub message: String,
     pub handle: String,
 }
 
+#[derive(Deserialize, Serialize)]
 pub struct MessageHandle {
     pub handle: String,
     pub message_id: String,
@@ -56,12 +56,7 @@ impl Startup {
         // }
 
         for message in message_list {
-            let message_id = ChatActions::send_message(message.message).await.unwrap();
-
-            ChatState::save_message_handle(MessageHandle {
-                handle: message.handle,
-                message_id,
-            });
+            ChatActions::send_message(message).await;
         }
     }
 }

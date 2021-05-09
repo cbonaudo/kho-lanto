@@ -4,12 +4,18 @@ use async_std::task;
 use job_scheduler::{Job, JobScheduler};
 use serde_json::json;
 
+use crate::{domain::SaveFile};
+
 pub fn start_scheduler() {
     let mut sched = JobScheduler::new();
 
     // Every second
     sched.add(Job::new("0/50 * * * * * *".parse().unwrap(), || {
         // send_messages(&token);
+    }));
+
+    sched.add(Job::new("0/50 * * * * * *".parse().unwrap(), || {
+        save_states();
     }));
 
     loop {
@@ -38,4 +44,8 @@ pub fn _send_messages(token: &str) {
     });
 
     task::block_on(task);
+}
+
+pub fn save_states() {
+    SaveFile::save_states()
 }

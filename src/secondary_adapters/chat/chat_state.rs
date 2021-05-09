@@ -1,21 +1,20 @@
 use once_cell::sync::Lazy;
+use serde::{Deserialize, Serialize};
+use std::sync::Mutex;
 
 use crate::domain::MessageHandle;
 
 pub static CHAT_STATE: Lazy<ChatState> = Lazy::new(|| ChatState::new());
 
+#[derive(Deserialize, Serialize)]
 pub struct ChatState {
-    pub wood: Option<String>,
-    pub fire: Option<String>,
+    pub message_handle_list: Mutex<Vec<MessageHandle>>,
 }
 
 impl ChatState {
     pub fn new() -> Self {
         Self {
-            wood: None,
-            fire: None,
+            message_handle_list: Mutex::new(vec![]),
         }
     }
-
-    pub fn save_message_handle(message_handle: MessageHandle) {}
 }

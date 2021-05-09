@@ -3,8 +3,8 @@ use std::thread;
 mod config;
 
 mod domain;
-mod secondary_adapters;
 mod primary_adapters;
+mod secondary_adapters;
 
 #[tokio::main]
 async fn main() {
