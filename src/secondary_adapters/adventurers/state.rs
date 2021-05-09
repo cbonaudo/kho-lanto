@@ -1,36 +1,35 @@
 use once_cell::sync::Lazy;
 use serde::{Deserialize, Serialize};
-use std::fs;
-use std::sync::Mutex;
+use std::{fs, sync::Mutex};
 
-use crate::domain::MessageHandle;
+use crate::domain::dto::Adventurer;
 
-pub static CHAT_STATE: Lazy<ChatState> = Lazy::new(||
+pub static ADVENTURERS_STATE: Lazy<State> = Lazy::new(||
     // TODO: refactor this
-    if let Ok(file_contents) = fs::read("./state_saves/chat") {
+    if let Ok(file_contents) = fs::read("./state_saves/adventurers") {
         if let Ok(saved_state) = String::from_utf8(file_contents) {
             if let Ok(state_parsed) = serde_json::from_str(&saved_state) {
                 return state_parsed
             } else {
-                return ChatState::new()
+                return State::new()
             }
         } else {
-            return ChatState::new()
+            return State::new()
         }
     } else {
-        return ChatState::new()
+        return State::new()
     }
 );
 
 #[derive(Deserialize, Serialize)]
-pub struct ChatState {
-    pub message_handle_list: Mutex<Vec<MessageHandle>>,
+pub struct State {
+    pub adventurers_list: Mutex<Vec<Adventurer>>,
 }
 
-impl ChatState {
+impl State {
     pub fn new() -> Self {
         Self {
-            message_handle_list: Mutex::new(vec![]),
+            adventurers_list: Mutex::new(vec![]),
         }
     }
 }

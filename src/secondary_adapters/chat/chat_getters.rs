@@ -17,6 +17,6 @@ impl ChatGetters {
         message_handle_list
             .iter()
             .position(|message_handle| message_handle.handle == handle)
-            .map(|index| message_handle_list[index].clone())        
+            .map(|index| message_handle_list[index].clone())
     }
 }

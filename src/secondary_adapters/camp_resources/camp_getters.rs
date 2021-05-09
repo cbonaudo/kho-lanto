@@ -9,10 +9,6 @@ impl CampGetters {
         CAMP_STATE.wood
     }
 
-    pub fn is_fire_tryable() -> bool {
-        CAMP_STATE.wood > 9
-    }
-
     pub fn get_state_as_string() -> String {
         let camp_state: &CampState = Lazy::<CampState>::force(&CAMP_STATE);
         serde_json::to_string(camp_state).unwrap()

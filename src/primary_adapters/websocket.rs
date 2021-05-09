@@ -4,7 +4,10 @@ use serenity::{
 };
 use std::{thread, time};
 
-use crate::config;
+use crate::{
+    config,
+    domain::{dto::Occupation, Camp},
+};
 
 struct Handler;
 impl EventHandler for Handler {
@@ -16,8 +19,13 @@ impl EventHandler for Handler {
         if msg.author.name != "bronnie-degniart"
             && msg.channel_id.as_u64() == &(839488059253719080 as u64)
         {
-            println!("{}", msg.author.name);
+            println!("{}: {}", msg.author.name, msg.content);
+
             delete_message(&ctx, &msg);
+
+            if msg.content == "bois" {
+                Camp::assign(msg.author.name, Occupation::WOOD);
+            }
         }
     }
 }

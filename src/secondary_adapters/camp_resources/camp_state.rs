@@ -7,7 +7,11 @@ pub static CAMP_STATE: Lazy<CampState> = Lazy::new(||
     // TODO: refactor this
     if let Ok(file_contents) = fs::read("./state_saves/camp") {
         if let Ok(saved_state) = String::from_utf8(file_contents) {
-            return serde_json::from_str(&saved_state).unwrap()
+            if let Ok(state_parsed) = serde_json::from_str(&saved_state) {
+                return state_parsed
+            } else {
+                return CampState::new()
+            }
         } else {
             return CampState::new()
         }
