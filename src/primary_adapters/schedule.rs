@@ -7,7 +7,7 @@ pub fn start_scheduler() {
     let mut sched = JobScheduler::new();
 
     // Every second
-    sched.add(Job::new("0/50 * * * * * *".parse().unwrap(), || {
+    sched.add(Job::new("0/5 * * * * * *".parse().unwrap(), || {
         let task = task::spawn(async {
             Camp::display_interface().await;
         });

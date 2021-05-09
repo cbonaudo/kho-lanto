@@ -1,26 +1,19 @@
 use once_cell::sync::Lazy;
 use serde::{Deserialize, Serialize};
-use std::fs;
 use std::sync::Mutex;
 
-use crate::domain::MessageHandle;
+use crate::{domain::MessageHandle, secondary_adapters::save::FileSystem};
 
-pub static CHAT_STATE: Lazy<ChatState> = Lazy::new(||
-    // TODO: refactor this
-    if let Ok(file_contents) = fs::read("./state_saves/chat") {
-        if let Ok(saved_state) = String::from_utf8(file_contents) {
-            if let Ok(state_parsed) = serde_json::from_str(&saved_state) {
-                return state_parsed
-            } else {
-                return ChatState::new()
+pub static CHAT_STATE: Lazy<ChatState> = 
+    Lazy::new(
+        || match FileSystem::get_saved_state::<ChatState>("chat".to_string()) {
+            Ok(saved_state) => return saved_state,
+            Err(e) => {
+                eprintln!("could not get the {} state: {}", "chat", e);
+                return ChatState::new();
             }
-        } else {
-            return ChatState::new()
-        }
-    } else {
-        return ChatState::new()
-    }
-);
+        },
+    );
 
 #[derive(Deserialize, Serialize)]
 pub struct ChatState {

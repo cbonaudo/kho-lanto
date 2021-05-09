@@ -69,6 +69,7 @@ impl Camp {
             }
         }
 
+        // TODO: remove after testing phase
         SaveFile::save_states();
     }
 

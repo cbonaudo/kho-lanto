@@ -1,25 +1,19 @@
 use once_cell::sync::Lazy;
 use serde::{Deserialize, Serialize};
-use std::{fs, sync::Mutex};
+use std::sync::Mutex;
 
-use crate::domain::dto::Adventurer;
+use crate::{domain::dto::Adventurer, secondary_adapters::save::FileSystem};
 
-pub static ADVENTURERS_STATE: Lazy<State> = Lazy::new(||
-    // TODO: refactor this
-    if let Ok(file_contents) = fs::read("./state_saves/adventurers") {
-        if let Ok(saved_state) = String::from_utf8(file_contents) {
-            if let Ok(state_parsed) = serde_json::from_str(&saved_state) {
-                return state_parsed
-            } else {
-                return State::new()
+pub static ADVENTURERS_STATE: Lazy<State> =
+    Lazy::new(
+        || match FileSystem::get_saved_state::<State>("adventurers".to_string()) {
+            Ok(saved_state) => return saved_state,
+            Err(e) => {
+                eprintln!("could not get the {} state: {}", "adventurers", e);
+                return State::new();
             }
-        } else {
-            return State::new()
-        }
-    } else {
-        return State::new()
-    }
-);
+        },
+    );
 
 #[derive(Deserialize, Serialize)]
 pub struct State {
