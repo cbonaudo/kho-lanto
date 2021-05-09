@@ -39,21 +39,23 @@ impl ChatActions {
             });
     }
 
-    pub async fn update_message(message_id: String, message: String) -> AnyResult<String> {
+    pub async fn update_message(message_id: String, message: String) {
         let request_url = format!(
             "https://discord.com/api/channels/839488059253719080/messages/{}",
             message_id
         );
 
-        surf::post(request_url)
+        if let Err(e) = surf::patch(request_url)
             .body(json!({
                 "content": message,
             }))
             .header("Authorization", config::get_header())
-            .recv_json::<ChannelMessage>()
             .await
-            .map(|res| res.id)
-            .map_err(|err| anyhow!("Error while trying to send api message: {}", err))
+        {
+            eprintln!("{}", e);
+        }
+
+        ()
     }
 
     pub async fn delete_all_messages() {

@@ -1,2 +1,4 @@
 /target
+/state_saves/*
+!/state_saves/.gitkeep
 env.toml

@@ -1,5 +1,5 @@
-mod startup;
 mod save_file;
+mod startup;
 
-pub use startup::{MessageHandle, MessageInput, Startup};
 pub use save_file::SaveFile;
+pub use startup::{MessageHandle, MessageInput, Startup};

@@ -4,7 +4,7 @@ use async_std::task;
 use job_scheduler::{Job, JobScheduler};
 use serde_json::json;
 
-use crate::{domain::SaveFile};
+use crate::domain::SaveFile;
 
 pub fn start_scheduler() {
     let mut sched = JobScheduler::new();
